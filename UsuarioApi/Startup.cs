@@ -1,14 +1,8 @@
-using FilmesApi.Data;
-using FilmesApi.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System;
+using UsuarioApi.Data;
 
-namespace FilmesAPI
+namespace UsuarioApi
 {
     public class Startup
     {
@@ -22,12 +16,11 @@ namespace FilmesAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(opts => opts.UseLazyLoadingProxies().UseMySQL(Configuration.GetConnectionString("CinemaConnection")));
-            services.AddScoped<FilmeService, FilmeService>();
-            services.AddScoped<CinemaService, CinemaService>();
-            services.AddScoped<EnderecoService, EnderecoService>();
-            services.AddScoped<SessaoService, SessaoService>();
-            services.AddScoped<GerenteService, GerenteService>();
+            services.AddDbContext<UserDbContext>(opts => 
+                opts.UseMySQL(Configuration.GetConnectionString("UsuarioConnection"))
+                );
+            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>()
+                    .AddEntityFrameworkStores<UserDbContext>();
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
